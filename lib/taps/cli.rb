@@ -50,23 +50,6 @@ class Cli
     end
   end
 
-  def server
-    opts = serveroptparse
-    Taps.log.level = Logger::DEBUG if opts[:debug]
-    Taps::Config.database_url = opts[:database_url]
-    Taps::Config.login = opts[:login]
-    Taps::Config.password = opts[:password]
-
-    Taps::Config.verify_database_url
-    require 'taps/server'
-    Taps::Server.run!({
-      :port => opts[:port],
-      :environment => :production,
-      :logging => true,
-      :dump_errors => true,
-    })
-  end
-
   def version
     puts Taps.version
   end
@@ -75,46 +58,12 @@ class Cli
     puts <<EOHELP
 Options
 =======
-server    Start a taps database import/export server
 pull      Pull a database from a taps server
 push      Push a database to a taps server
 version   Taps version
 
 Add '-h' to any command to see their usage
 EOHELP
-  end
-
-  def serveroptparse
-    opts={:port => 5000, :database_url => nil, :login => nil, :password => nil, :debug => false}
-    OptionParser.new do |o|
-      o.banner = "Usage: #{File.basename($0)} server [OPTIONS] <local_database_url> <login> <password>"
-      o.define_head "Start a taps database import/export server"
-
-      o.on("-p", "--port=N", "Server Port") { |v| opts[:port] = v.to_i if v.to_i > 0 }
-      o.on("-d", "--debug", "Enable Debug Messages") { |v| opts[:debug] = true }
-      o.parse!(argv)
-
-      opts[:database_url] = argv.shift
-      opts[:login] = argv.shift
-      opts[:password] = argv.shift
-
-      if opts[:database_url].nil?
-        $stderr.puts "Missing Database URL"
-        puts o
-        exit 1
-      end
-      if opts[:login].nil?
-        $stderr.puts "Missing Login"
-        puts o
-        exit 1
-      end
-      if opts[:password].nil?
-        $stderr.puts "Missing Password"
-        puts o
-        exit 1
-      end
-    end
-    opts
   end
 
   def clientoptparse(cmd)

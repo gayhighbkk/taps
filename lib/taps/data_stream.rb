@@ -266,14 +266,7 @@ class DataStreamKeyed < DataStream
   end
 
   def calc_limit(chunksize)
-    # we want to not fetch more than is needed while we're
-    # inside sinatra but locally we can select more than
-    # is strictly needed
-    if defined?(Sinatra)
-      (chunksize * 1.1).ceil
-    else
-      (chunksize * 3).ceil
-    end
+    (chunksize * 3).ceil
   end
 
   def load_buffer(chunksize)
