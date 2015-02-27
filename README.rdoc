@@ -1,3 +1,5 @@
+<b>NOTE: This fork is no longer supported or updated by GitHub. See https://github.com/ricardochimal/taps</b>
+
 = Taps -- simple database import/export app
 
 A simple database agnostic import/export app to transfer data to/from a remote database.
